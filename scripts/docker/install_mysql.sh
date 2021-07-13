@@ -23,6 +23,7 @@ declare -a packages
 MYSQL_VERSION="8.0"
 readonly MYSQL_VERSION
 
+sudo apt update
 install_mysql_client() {
     echo
     echo Installing mysql client
@@ -40,11 +41,13 @@ install_mysql_client() {
     fi
 
     local key="A4A9406876FCBD3C456770C88C718D3B5072E1F5"
+#    local key="5072E1F5"
     readonly key
 
     GNUPGHOME="$(mktemp -d)"
     export GNUPGHOME
     set +e
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8C718D3B5072E1F5
     for keyserver in $(shuf -e ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 \
                                keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80)
     do
@@ -62,7 +65,6 @@ install_mysql_client() {
     apt-get autoremove -yqq --purge
     apt-get clean && rm -rf /var/lib/apt/lists/*
 }
-
 
 
 # Install MySQL Client during the container build
